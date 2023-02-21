@@ -1,0 +1,113 @@
+{% set menus = menu_service.findAll %}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+        {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
+        {% block stylesheets %}
+            {{ encore_entry_link_tags('app') }}
+        {% endblock %}
+
+        {% block javascripts %}
+            {{ encore_entry_script_tags('app') }}
+        {% endblock %}
+    </head>
+    <body>
+        {% if is_granted("ROLE_AUTHOR") %}
+            <nav class="py-2 bg-dark border-bottom">
+                <div class="container d-flex flex-wrap">
+
+                    <div class="dropdown">
+                        <a class="nav nav-link link-light px-2 dropdown-toggle text-white" role="button" id="dropdownAdminLink" data-bs-toggle="dropdown" aria-expanded="false">
+                            mon blog
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownAdminLink">
+                            <li><a class="dropdown-item" href="{{ ea_url() }}">Tableau de bord</a>
+                            {% if is_granted("ROLE_ADMIN") %}
+                                <li><a class="dropdown-item" href="{{ ea_admin_url('MenuCrudController') }}">Menus</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+
+                    <div class="nav dropdown">
+                        <a class="nav-link link-light px-2 dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Ajouter
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ ea_admin_url('ArticleCrudController', 'new') }}">Article</a></li>
+                            <li><a class="dropdown-item" href="{{ ea_admin_url('PageCrudController', 'new') }}">Page</a></li>
+                        </ul>
+                    </div>
+
+                </div>
+            </nav>
+        {% endif %}
+        
+
+        <div class="container">
+            <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+                <a href="{{ path('app_home')}}" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+                    <span class="fs-4">Mon blog</span>
+                </a>
+
+                <ul class="nav nav-pills align-items-center">
+
+                    {% for menu in menus %}
+                        {% if menu.subMenus.count > 0 %}
+                            <li class="nav-item">
+                                <div class="nav dropdown">
+                                    <a class="nav-link link-dark px-2 dropdown-toggle text-dark" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        {{menu.name}}
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        {% for subMenu in menu.subMenus %}
+                                            <li><a class="dropdown-item" href="{{ subMenu|menuLink }}">{{subMenu.name}}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="{{ menu|menuLink }}">{{menu.name}}</a>
+                            </li>
+                        {% endif %}
+                        
+                    {% endfor %}
+                    {% if not is_granted("IS_AUTHENTICATED_FULLY") %}
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="{{ path("app_register") }}">S'inscrire</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{path("app_login")}}" class="nav-link text-dark">
+                                <span class="menu-label">Se connecter</span>
+                            </a>
+                        </li>
+                    {% else %}
+                        <div class="nav dropdown">
+                            <a class="nav-link link-dark px-2 dropdown-toggle text-dark" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                {{ app.user.username|capitalize }}
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{{path("app_profile",{ username: app.user.username })}}">Mon profil</a></li>
+
+                                <li><a class="dropdown-item" href="{{path("app_logout")}}">Déconnexion</a></li>
+                            </ul>
+                        </div>
+                    {% endif %}
+                    
+                </ul>
+            </header>
+        </div>
+        {% block body %}{% endblock %}
+
+        <footer class="container border-top">
+            <div class="col-md-4 d-flex align-items-center mt-4">
+                <span class="copyright">@ {{'now'|date('Y')}} radium agency. Tous droits réservés</span>
+            </div>
+        </footer>
+        </div>
+    </body>
+</html>

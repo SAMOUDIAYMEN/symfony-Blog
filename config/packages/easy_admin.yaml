@@ -1,0 +1,12 @@
+easy_admin:
+    entities:
+        Article:
+            class: App\Entity\Article
+            form:
+                fields:
+                    - { property: 'title' }
+                    - { property: 'slug' }
+                    - { property: 'content' }
+                    - { property: 'categories' }
+                    - { property: 'featuredText' }
+                    - { property: 'imageFile', type: App\Form\ArticleType }
