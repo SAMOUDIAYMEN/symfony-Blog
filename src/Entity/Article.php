@@ -44,6 +44,9 @@ class Article implements TimestampedInterface
     #[ORM\ManyToOne]
     private ?Media $featuredImageId = null;
 
+    #[ORM\Column(length: 5000)]
+    private ?string $image = null;
+
     public function __construct()
     {
         $this->categories = new ArrayCollection();
@@ -199,5 +202,17 @@ class Article implements TimestampedInterface
     public function __toString():  string
     {
         return $this->title;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(string $image): self
+    {
+        $this->image = $image;
+
+        return $this;
     }
 }

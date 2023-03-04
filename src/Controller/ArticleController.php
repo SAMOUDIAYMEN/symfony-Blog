@@ -7,20 +7,24 @@ use App\Entity\Comment;
 use App\Entity\Media;
 use App\Form\Type\CommentType;
 use App\Service\CommentService;
+use App\Repository\MediaRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\BrowserKit\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+
 class ArticleController extends AbstractController
 {
 
     private $entityManager;
+    private $mediaRepository;
 
-    public function __construct(ManagerRegistry $doctrine)
+    public function __construct(ManagerRegistry $doctrine, MediaRepository $mediaRepository)
     {
         $this->entityManager = $doctrine->getManager();
+        $this->mediaRepository = $mediaRepository;
     }
 
     #[Route('/article/{slug}', name: 'article_show')]
@@ -40,37 +44,5 @@ class ArticleController extends AbstractController
             'commentForm' => $commentForm,
         ]);
     }
-    
-    // #[Route('/article/new', name: 'article_new')]
-    // public function new(Request $request)
-    // {
-    //     $article = new Article();
-    //     $form = $this->createForm(ArticleType::class, $article);
-    //     $form->handleRequest($request);
-
-    //     if ($form->isSubmitted() && $form->isValid()) {
-    //         $entityManager = $this->entityManager;
-
-    //         $imageFile = $form->get('featuredImageId')->getData();
-
-    //         if ($imageFile) {
-    //             $media = new Media();
-    //             $media->setFilename($imageFile);
-    //             $entityManager->persist($media);
-    //             $entityManager->flush();
-
-    //             $article->setFeaturedImageId($media);
-    //         }
-
-    //         $entityManager->persist($article);
-    //         $entityManager->flush();
-
-    //         return $this->redirectToRoute('app_home');
-    //     }
-
-    //     return $this->render('admin/article/new.html.twig', [
-    //         'form' => $form->createView(),
-    //     ]);
-    // }
 
 }

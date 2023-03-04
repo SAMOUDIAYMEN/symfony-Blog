@@ -9,6 +9,7 @@ use App\Entity\Media;
 use App\Entity\Menu;
 use App\Entity\Option;
 use App\Entity\Page;
+use App\Entity\Email;
 use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -46,6 +47,7 @@ class DashboardController extends AbstractDashboardController
 
         if($this->isGranted('ROLE_ADMIN')){
             yield MenuItem::linkToCrud('Menus', 'fas fa-list',Menu::class);
+            yield MenuItem::linkToCrud('Emails', 'fas fa-envelope', Email::class);
             // ->setSubItems([
             //     MenuItem::linkToCrud('Pages', 'fas fa-file', Menu::class),
             //     MenuItem::linkToCrud('Articles', 'fas fa-newspaper', Menu::class),

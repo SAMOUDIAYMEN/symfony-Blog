@@ -21,6 +21,9 @@ class WelcomeType extends AbstractType
             ->add('username', TextType::class, [
                 'label' => "Nom d'utilisateur"
             ])
+            ->add('email', TextType::class, [
+                'label' => "Email"
+            ])
             ->add('password', PasswordType::class, [
                 'label' => "Mot de passe"
             ])

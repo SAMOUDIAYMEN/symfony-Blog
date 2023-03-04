@@ -1,0 +1,13 @@
+fm_elfinder:
+    instances: 
+        default:
+            editor: ckeditor # other options are tinymce, tinymce4, fm_tinymce, form, simple, custom
+            relative_path: false #default true, will produce absolute urls to specified file(s)
+            connector:
+                roots:
+                    uploads:
+                        driver: LocalFileSystem
+                        path: uploads
+                        upload_allow: ['image/png', 'image/jpg', 'image/jpeg','application/pdf']
+                        upload_deny: ['all']
+                        upload_max_size: 40M
